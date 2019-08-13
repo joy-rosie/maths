@@ -18,7 +18,7 @@ env:
 script:
     - jupyter nbconvert probability/probability_questions.ipynb --to html
 
-after_success: |
+after_success:
   - mv -f probability/probability_questions.html index.html
   - pwd
   - ls
