@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/joy-rosie/maths.svg?branch=master)](https://travis-ci.org/joy-rosie/maths)
 # Maths
 Repository for maths resources
 

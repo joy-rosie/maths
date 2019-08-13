@@ -16,9 +16,7 @@ env:
   - GH_REPO="github.com/${USER}/${REPO}.git"
 
 script:
-    - jupyter nbconvert probability/probability_questions.ipynb --to html
-
-after_success:
+  - jupyter nbconvert probability/probability_questions.ipynb --to html
   - mv -f probability/probability_questions.html index.html
   - git clone git://${GH_REPO}
   - mv -f ${FILES} ${REPO}
