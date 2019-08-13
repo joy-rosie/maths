@@ -22,7 +22,7 @@ after_success:
   - mv -f probability/probability_questions.html index.html
   - pwd
   - ls
-  - MESSAGE=$(git log --format=%B -n 1 $TRAVIS_COMMIT)
+  - MESSAGE=$(git log --format=%B -n 1)
   - git clone git://${GH_REPO}
   - mv -f ${FILES} ${REPO}
   - cd ${REPO}
