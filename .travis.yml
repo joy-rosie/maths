@@ -11,7 +11,7 @@ env:
   global:
   - USER="joy-rosie"
   - EMAIL="joytolia@hotmail.com"
-  - REPO="probability_pages"
+  - REPO="probability"
   - FILES="index.html"
   - GH_REPO="github.com/${USER}/${REPO}.git"
 
