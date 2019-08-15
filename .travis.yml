@@ -12,15 +12,16 @@ env:
   - USER="joy-rosie"
   - EMAIL="joytolia@hotmail.com"
   - REPO="probability"
+  - REPO_DIR="probability_pages"
   - FILES="index.html"
   - GH_REPO="github.com/${USER}/${REPO}.git"
 
 script:
   - jupyter nbconvert probability/probability_questions.ipynb --to html
   - mv -f probability/probability_questions.html index.html
-  - git clone git://${GH_REPO}
-  - mv -f ${FILES} ${REPO}
-  - cd ${REPO}
+  - git clone git://${GH_REPO} ${REPO_DIR}
+  - mv -f ${FILES} ${REPO_DIR}
+  - cd ${REPO_DIR}
   - git remote
   - git config user.email ${EMAIL}
   - git config user.name ${USER}
