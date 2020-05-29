@@ -60,9 +60,9 @@ jobs:
     - name: Update and push the pages repository
       run: |
         cd ${{ matrix.repo_dir }}
-        git remote add git@github.com:joy-rosie/probability.git
+        git remote add github_actions_ssh git@github.com:joy-rosie/probability.git
         git config user.email joytolia@hotmail.com
         git config user.name joyrosie
         git add index.html
         git diff --quiet && git diff --staged --quiet || git commit -m "update probability index.html"
-        git push -u master
+        git push -u github_actions_ssh master
