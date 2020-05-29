@@ -44,6 +44,8 @@ jobs:
       with:
         repository: joy-rosie/probability
         path: ${{ matrix.repo_dir }}
+        fetch-depth: '0'
+        ref: 'master'
         
     - name: Move nbconverted html notebook to pages repository
       run: mv ${{ matrix.notebook }}.html ${{ matrix.repo_dir }}/index.html
