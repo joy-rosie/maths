@@ -21,6 +21,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.8]
+        notebook: [probability/probability_questions]
 
     steps:
     # Checkout current repository
@@ -37,3 +38,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        
+    # Convert notebook to html
+    - name: Convert notebook to html
+      run: python -m jupyter nbconvert ${{ matrix.notebook }}.ipynb --to html --execute
