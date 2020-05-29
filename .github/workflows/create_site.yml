@@ -20,7 +20,9 @@ jobs:
       matrix:
         python-version: [3.8]
         notebook: [probability/probability_questions]
+        target_repository: [joy-rosie/probability]
         repo_dir: [probability_pages]
+        add_files: [index.html]
 
     steps:
     - name: Checkout current repository
@@ -42,7 +44,7 @@ jobs:
     - name: Checkout pages repository
       uses: actions/checkout@v2
       with:
-        repository: joy-rosie/probability
+        repository: ${{ matrix.target_repository }}
         path: ${{ matrix.repo_dir }}
         fetch-depth: '0'
         ref: 'master'
@@ -52,7 +54,7 @@ jobs:
     
     # To make this work you need the following:
     # 1) Run "ssh-keygen -t rsa -b 4096" and store into a temporary key file
-    # 2) Copy the public key and store into the pages repository "Settings" -> "Deploy Keys"
+    # 2) Copy the public key and store into the target (pages) repository "Settings" -> "Deploy Keys"
     # 3) Copy the private key and store into secrets of this repository as "SSH_PRIVATE_KEY"
     # 4) Copy the public key and prepend with "github.com " and add into secrets of this repository as "KNOWN_HOSTS"
     - name: Install SSH key
@@ -65,9 +67,9 @@ jobs:
     - name: Update and push the pages repository
       run: |
         cd ${{ matrix.repo_dir }}
-        git remote add github_actions_ssh git@github.com:joy-rosie/probability.git
-        git config user.email joytolia@hotmail.com
+        git remote add github_actions_ssh git@github.com:${{ matrix.target_repository }}.git
+        git config user.email $GITHUB_ACTOR
         git config user.name $GITHUB_ACTOR
-        git add index.html
-        git diff --quiet && git diff --staged --quiet || git commit -m "update probability index.html"
+        git add $${{ matrix.add_files }}
+        git diff --quiet && git diff --staged --quiet || git commit -m "update ${{ matrix.target_repository }} index.html"
         git push -u github_actions_ssh master
