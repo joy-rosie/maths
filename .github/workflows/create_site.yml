@@ -56,5 +56,4 @@ jobs:
         git config user.name joyrosie
         git add index.html
         git diff --quiet && git diff --staged --quiet || git commit -m "update probability index.html"
-        #git push "https://${GITHUB_API_KEY}@github.com/joy-rosie/probability.git" master
-        git status
+        git push "https://${{ secrets.SSH_key }}@github.com/joy-rosie/probability.git" master
