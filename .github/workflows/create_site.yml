@@ -53,7 +53,7 @@ jobs:
         cd ${{ matrix.repo_dir }}
         git remote
         git config user.email joytolia@hotmail.com
-        git config user.name ${{ GITHUB_ACTOR }}
+        git config user.name joyrosie
         git add index.html
         git diff --quiet && git diff --staged --quiet || git commit -m "update probability index.html"
         #git push "https://${GITHUB_API_KEY}@github.com/joy-rosie/probability.git" master
