@@ -47,13 +47,20 @@ jobs:
         
     - name: Move nbconverted html notebook to pages repository
       run: mv ${{ matrix.notebook }}.html ${{ matrix.repo_dir }}/index.html
+    
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+         key: ${{ secrets.SSH_PRIVATE_KEY }}
+         name: id_rsa # optional
+         known_hosts: ${{ secrets.KNOWN_HOSTS }}
       
     - name: Update and push the pages repository
       run: |
         cd ${{ matrix.repo_dir }}
-        git remote
+        git remote add git@github.com:joy-rosie/probability.git
         git config user.email joytolia@hotmail.com
         git config user.name joyrosie
         git add index.html
         git diff --quiet && git diff --staged --quiet || git commit -m "update probability index.html"
-        git push "https://${{ secrets.SSH_key }}@github.com/joy-rosie/probability.git" master
+        git push -u master
