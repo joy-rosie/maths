@@ -7,8 +7,6 @@ name: CI
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -53,4 +51,10 @@ jobs:
     - name: Update and push the pages repository
       run: |
         cd ${{ matrix.repo_dir }}
-        ls
+        git remote
+        git config user.email joytolia@hotmail.com
+        git config user.name ${{ GITHUB_ACTOR }}
+        git add index.html
+        git diff --quiet && git diff --staged --quiet || git commit -m "update probability index.html"
+        #git push "https://${GITHUB_API_KEY}@github.com/joy-rosie/probability.git" master
+        git status
