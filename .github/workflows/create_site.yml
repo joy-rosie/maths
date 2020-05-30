@@ -1,0 +1,75 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    # Which python to run on?
+    strategy:
+      matrix:
+        python-version: [3.8]
+        notebook: [probability/probability_questions]
+        target_repository: [joy-rosie/probability]
+        repo_dir: [probability_pages]
+        add_files: [index.html]
+
+    steps:
+    - name: Checkout current repository
+      uses: actions/checkout@v2
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Install package dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
+        
+    - name: Convert notebook to html
+      run: python -m jupyter nbconvert ${{ matrix.notebook }}.ipynb --to html --execute
+
+    - name: Checkout pages repository
+      uses: actions/checkout@v2
+      with:
+        repository: ${{ matrix.target_repository }}
+        path: ${{ matrix.repo_dir }}
+        fetch-depth: '0'
+        ref: 'master'
+        
+    - name: Move nbconverted html notebook to pages repository
+      run: mv ${{ matrix.notebook }}.html ${{ matrix.repo_dir }}/index.html
+    
+    # To make this work you need the following:
+    # 1) Run "ssh-keygen -t rsa -b 4096" and store into a temporary key file
+    # 2) Copy the public key and store into the target (pages) repository "Settings" -> "Deploy Keys"
+    # 3) Copy the private key and store into secrets of this repository as "SSH_PRIVATE_KEY"
+    # 4) Copy the public key and prepend with "github.com " and add into secrets of this repository as "KNOWN_HOSTS"
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+         key: ${{ secrets.SSH_PRIVATE_KEY }}
+         name: id_rsa # optional
+         known_hosts: ${{ secrets.KNOWN_HOSTS }}
+      
+    - name: Update and push the pages repository
+      run: |
+        cd ${{ matrix.repo_dir }}
+        git remote add github_actions_ssh git@github.com:${{ matrix.target_repository }}.git
+        git config user.email $GITHUB_ACTOR
+        git config user.name $GITHUB_ACTOR
+        git add ${{ matrix.add_files }}
+        git diff --quiet && git diff --staged --quiet || git commit -m "update ${{ matrix.target_repository }} ${{ matrix.add_files }}"
+        git push -u github_actions_ssh master
